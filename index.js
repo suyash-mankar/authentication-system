@@ -3,6 +3,9 @@ const app = express();
 const port = 5000;
 const expressLayouts = require("express-ejs-layouts");
 const db = require("./config/mongoose");
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(expressLayouts);
 app.set("view engine", "ejs");

@@ -1,5 +1,6 @@
 const User = require("../models/user");
 
+// sign in and create a session for the user
 module.exports.signIn = function (req, res) {
   if (req.isAuthenticated()) {
     return res.redirect("/users/profile");
@@ -7,6 +8,15 @@ module.exports.signIn = function (req, res) {
   return res.render("user_sign_in", {
     title: "Sign In",
   });
+};
+
+module.exports.destroySession = function (req, res) {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
+  return res.redirect("/");
 };
 
 module.exports.signUp = function (req, res) {
@@ -49,5 +59,5 @@ module.exports.create = function (req, res) {
 };
 
 module.exports.createSession = function (req, res) {
-  return res.redirect("/");
+  return res.redirect("/users/profile");
 };

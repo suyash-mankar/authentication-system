@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocal = require("./config/passport-local-strategy");
+const MongoStore = require("connect-mongo");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -16,6 +17,7 @@ app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
+// mongo store is used to store the session cookie in the db
 app.use(
   session({
     name: "authentication_system",
@@ -25,6 +27,12 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 10,
     },
+    store: MongoStore.create({
+      mongoUrl: "mongodb://localhost:27017/authentication_system",
+      autoRemove: "disabled",
+    }, function(err){
+      console.log(err || "connect-mongodb setup ok");
+    }),
   })
 );
 

@@ -5,11 +5,33 @@ const expressLayouts = require("express-ejs-layouts");
 const db = require("./config/mongoose");
 const bodyParser = require("body-parser");
 
+// used for session cookie
+const session = require("express-session");
+const passport = require("passport");
+const passportLocal = require("./config/passport-local-strategy");
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.set("views", "./views");
+
+app.use(
+  session({
+    name: "authentication_system",
+    secret: "authsystem",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 100,
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(passport.setAuthenticatedUser);
 
 app.use("/", require("./routes"));
 

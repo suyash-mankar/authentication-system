@@ -12,6 +12,12 @@ module.exports.signUp = function (req, res) {
   });
 };
 
+module.exports.profile = function (req, res) {
+  return res.render("users_profile", {
+    title: "profile",
+  });
+};
+
 module.exports.create = function (req, res) {
   if (req.body.password !== req.body.confirm_password) {
     return res.redirect("back");
@@ -33,4 +39,8 @@ module.exports.create = function (req, res) {
       return res.redirect("back");
     }
   });
+};
+
+module.exports.createSession = function (req, res) {
+  return res.redirect("/");
 };

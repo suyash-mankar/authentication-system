@@ -13,9 +13,11 @@ passport.use(
     function (req, email, password, done) {
       User.findOne({ email: email }, function (err, user) {
         if (err) {
+          req.flash("error", err);
           return done(err);
         }
         if (!user || user.password !== password) {
+          req.flash("error", "Invalid Username/Password");
           return done(null, false);
         }
         return done(null, user);
@@ -58,4 +60,3 @@ passport.setAuthenticatedUser = function (req, res, next) {
   }
   next();
 };
- 

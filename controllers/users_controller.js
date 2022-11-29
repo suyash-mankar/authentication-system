@@ -10,15 +10,6 @@ module.exports.signIn = function (req, res) {
   });
 };
 
-module.exports.destroySession = function (req, res) {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }
-  });
-  return res.redirect("/");
-};
-
 module.exports.signUp = function (req, res) {
   if (req.isAuthenticated()) {
     return res.redirect("/users/profile");
@@ -37,6 +28,7 @@ module.exports.profile = function (req, res) {
 
 module.exports.create = function (req, res) {
   if (req.body.password !== req.body.confirm_password) {
+    req.flash("error", "Passwords don't match");
     return res.redirect("back");
   }
   User.findOne({ email: req.body.email }, function (err, user) {
@@ -50,6 +42,7 @@ module.exports.create = function (req, res) {
           console.log("error in creating user while signup", err);
           return;
         }
+        req.flash("success", "User created successfully");
         return res.redirect("/users/sign-in");
       });
     } else {
@@ -59,5 +52,17 @@ module.exports.create = function (req, res) {
 };
 
 module.exports.createSession = function (req, res) {
+  req.flash("success", "Logged in successfully");
   return res.redirect("/users/profile");
+};
+
+module.exports.destroySession = function (req, res) {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+  });
+  req.flash("success", "You have logged out");
+
+  return res.redirect("/");
 };

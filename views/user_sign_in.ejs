@@ -6,7 +6,11 @@
   <input type="submit" value="Sign In" />
 </form>
 
-
 <p>
   <a href="/users/auth/google"> Google Sign In/Sign Up</a>
 </p>
+
+<form action="/users/create-reset-password-token" method="post">
+  <input type="email" name="email" placeholder="email" required />
+  <input type="submit" value="Forgot Password" />
+</form>

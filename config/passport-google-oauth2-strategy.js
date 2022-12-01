@@ -9,7 +9,7 @@ passport.use(
     {
       clientID:
         "560084228664-h039sog4llvisgf006uspu2ehit6pg4q.apps.googleusercontent.com",
-      clientSecret: "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",
+      clientSecret: process.env.PASSPORT_GOOGLE_CLIENT_SECERET,
       callbackURL: "http://localhost:8000/users/auth/google/callback",
     },
     function (accessToken, refreshToken, profile, done) {

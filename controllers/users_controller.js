@@ -2,6 +2,10 @@ const ResetPasswordToken = require("../models/reset_password_token");
 const User = require("../models/user");
 const crypto = require("crypto");
 const resetPasswordMailer = require("../mailers/reset_password_mailer");
+const resetPasswordEmailWorker = require("../workers/resetPassword_email_worker");
+const queue = require("../config/kue");
+const encrypt = require('mongoose-encryption');
+
 
 // sign in and create a session for the user
 module.exports.signIn = function (req, res) {
@@ -80,10 +84,17 @@ module.exports.createResetPasswordToken = async function (req, res) {
         isValid: true,
       });
 
-      await resetPasswordToken.populate("user");
+      resetPasswordToken = await resetPasswordToken.populate("user");
 
       // send mail to user
-      resetPasswordMailer.resetPassword(resetPasswordToken);
+      // resetPasswordMailer.resetPassword(resetPasswordToken);
+      let job = queue.create("emails", resetPasswordToken).save(function (err) {
+        if (err) {
+          console.log("error in creating a queue");
+          return;
+        }
+        console.log("job enqueued", job.id);
+      });
 
       req.flash("success", "Check your mail id to reset password");
       return res.redirect("/");
@@ -139,4 +150,19 @@ module.exports.resetPassword = async function (req, res) {
       return res.redirect("back");
     }
   }
+};
+
+module.exports.changePasswordPage = function (req, res) {
+  return res.render("change_password", {
+    title: "change password",
+    userId: req.params.id,
+  });
+};
+
+module.exports.changePassword = async function (req, res) {
+  let user = await User.findById(req.params.id);
+  user.password = req.body.password;
+  user.save();
+  req.flash("success", "Password changed successfully");
+  return res.redirect("/users/sign-in");
 };

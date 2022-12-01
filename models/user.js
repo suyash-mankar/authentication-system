@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+var encrypt = require('mongoose-encryption');
+
 
 const userSchema = new mongoose.Schema(
   {
@@ -20,6 +22,9 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+const secret = "Thisisourlittlesecret.";
+userSchema.plugin(encrypt, {secret: secret, encryptedFields: ['password']});
 
 const User = mongoose.model("User", userSchema);
 

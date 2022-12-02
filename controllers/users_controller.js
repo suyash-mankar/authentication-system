@@ -4,8 +4,7 @@ const crypto = require("crypto");
 const resetPasswordMailer = require("../mailers/reset_password_mailer");
 const resetPasswordEmailWorker = require("../workers/resetPassword_email_worker");
 const queue = require("../config/kue");
-const encrypt = require('mongoose-encryption');
-
+const md5 = require("md5");
 
 // sign in and create a session for the user
 module.exports.signIn = function (req, res) {
@@ -33,29 +32,24 @@ module.exports.profile = function (req, res) {
   });
 };
 
-module.exports.create = function (req, res) {
+module.exports.create = async function (req, res) {
   if (req.body.password !== req.body.confirm_password) {
     req.flash("error", "Passwords don't match");
     return res.redirect("back");
   }
-  User.findOne({ email: req.body.email }, function (err, user) {
-    if (err) {
-      console.log("error in finding user while signup", err);
-      return;
-    }
-    if (!user) {
-      User.create(req.body, function (err, user) {
-        if (err) {
-          console.log("error in creating user while signup", err);
-          return;
-        }
-        req.flash("success", "User created successfully");
-        return res.redirect("/users/sign-in");
-      });
-    } else {
-      return res.redirect("back");
-    }
-  });
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    const newUser = await User.create({
+      email: req.body.email,
+      password: md5(req.body.password),
+      name: req.body.name,
+    });
+    req.flash("success", "User created successfully");
+    return res.redirect("/users/sign-in");
+  } else {
+    return res.redirect("back");
+  }
 };
 
 module.exports.createSession = function (req, res) {

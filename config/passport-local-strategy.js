@@ -1,4 +1,5 @@
 const passport = require("passport");
+const md5 = require("md5");
 
 const LocalStrategy = require("passport-local").Strategy;
 
@@ -16,7 +17,7 @@ passport.use(
           req.flash("error", err);
           return done(err);
         }
-        if (!user || user.password !== password) {
+        if (!user || user.password !== md5(password)) {
           req.flash("error", "Invalid Username/Password");
           return done(null, false);
         }

@@ -4,7 +4,8 @@ const crypto = require("crypto");
 const resetPasswordMailer = require("../mailers/reset_password_mailer");
 const resetPasswordEmailWorker = require("../workers/resetPassword_email_worker");
 const queue = require("../config/kue");
-const md5 = require("md5");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 // sign in and create a session for the user
 module.exports.signIn = function (req, res) {
@@ -40,10 +41,12 @@ module.exports.create = async function (req, res) {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    const newUser = await User.create({
-      email: req.body.email,
-      password: md5(req.body.password),
-      name: req.body.name,
+    bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+      User.create({
+        email: req.body.email,
+        password: hash,
+        name: req.body.name,
+      });
     });
     req.flash("success", "User created successfully");
     return res.redirect("/users/sign-in");

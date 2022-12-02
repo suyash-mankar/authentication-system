@@ -1,9 +1,10 @@
 const passport = require("passport");
-const md5 = require("md5");
 
 const LocalStrategy = require("passport-local").Strategy;
 
 const User = require("../models/user");
+
+const bcrypt = require("bcrypt");
 
 passport.use(
   new LocalStrategy(
@@ -17,11 +18,21 @@ passport.use(
           req.flash("error", err);
           return done(err);
         }
-        if (!user || user.password !== md5(password)) {
+
+        if (user) {
+          bcrypt.compare(password, user.password, function (err, result) {
+            // result == true
+            if (result) {
+              return done(null, user);
+            } else {
+              req.flash("error", "Invalid Username/Password");
+              return done(null, false);
+            }
+          });
+        } else {
           req.flash("error", "Invalid Username/Password");
           return done(null, false);
         }
-        return done(null, user);
       });
     }
   )

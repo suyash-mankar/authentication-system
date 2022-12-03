@@ -9,6 +9,7 @@
     margin-top: 20px;
     width: 100%; }
     .login-form-container button img {
+      margin-bottom: 3px;
       width: 15px; }
   .login-form-container .or-container {
     display: flex;

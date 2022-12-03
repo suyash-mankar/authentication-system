@@ -1,5 +1,5 @@
-.login-form-container {
-  width: 30%;
+.signup-form-container {
+  width: 40%;
   border: 1px solid lightgrey;
   border-radius: 10px;
   margin: 50px auto;
@@ -8,7 +8,7 @@
 
   button {
     margin-top: 20px;
-    width: 100%;
+    width: 50%;
 
     img {
       margin-bottom: 3px;
@@ -33,7 +33,25 @@
     }
   }
 
-  #login-form {
+  #signup-form {
+    .name-email-container {
+      display: flex;
+      justify-content: space-between;
+
+      div {
+        width: 45%;
+      }
+    }
+
+    .password-container {
+      display: flex;
+      justify-content: space-between;
+
+      div {
+        width: 45%;
+      }
+    }
+
     label {
       display: block;
       margin-bottom: 5px;
@@ -50,6 +68,7 @@
     }
     button {
       margin-top: 20px;
+      width: 50%;
     }
   }
 }

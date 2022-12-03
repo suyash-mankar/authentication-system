@@ -11,6 +11,8 @@ header {
   header a {
     color: white;
     text-decoration: none; }
+  header a:hover {
+    color: black; }
   header .menu-container {
     display: flex;
     list-style: none;

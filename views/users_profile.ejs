@@ -1,8 +1,8 @@
-<h1>Profile Page</h1>
+<link rel="stylesheet" href="/css/user_profile.css" />
 
-<p><%= user.name %></p>
-<p><%= user.email %></p>
-
-<a href="/users/change-password/<%= user.id %>">
-  reset password
-</a>
+<div class="container">
+  <h2>User Profile</h2>
+  <p>Name : <%= user.name %></p>
+  <p>Email : <%= user.email %></p>
+  <a href="/users/change-password/<%= user.id %>"> Reset Password </a>
+</div>

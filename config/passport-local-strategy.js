@@ -1,10 +1,8 @@
 const passport = require("passport");
-
 const LocalStrategy = require("passport-local").Strategy;
-
 const User = require("../models/user");
-
 const bcrypt = require("bcrypt");
+const fetch = require("node-fetch");
 
 passport.use(
   new LocalStrategy(
@@ -12,28 +10,36 @@ passport.use(
       usernameField: "email",
       passReqToCallback: true,
     },
-    function (req, email, password, done) {
-      User.findOne({ email: email }, function (err, user) {
-        if (err) {
-          req.flash("error", err);
-          return done(err);
-        }
+    async function (req, email, password, done) {
+      let user = await User.findOne({ email: email });
 
-        if (user) {
-          bcrypt.compare(password, user.password, function (err, result) {
-            // result == true
-            if (result) {
-              return done(null, user);
-            } else {
-              req.flash("error", "Invalid Username/Password");
-              return done(null, false);
-            }
-          });
-        } else {
-          req.flash("error", "Invalid Username/Password");
-          return done(null, false);
+      const response = await fetch(
+        `https://www.google.com/recaptcha/api/siteverify?secret=6LcVgVEjAAAAAJa3WNSWAcAJb8Bbw08Yn_OpaW1u&response=${req.body["g-recaptcha-response"]}`,
+        {
+          method: "POST",
         }
-      });
+      );
+
+      const captchaVerified = await response.json();
+
+      if (!captchaVerified.success) {
+        req.flash("error", "please check captcha");
+        return done(null, false);
+      }
+
+      if (user) {
+        bcrypt.compare(password, user.password, function (err, result) {
+          if (result) {
+            return done(null, user);
+          } else {
+            req.flash("error", "Invalid Username/Password");
+            return done(err, false);
+          }
+        });
+      } else {
+        req.flash("error", "Invalid Username/Password");
+        return done(err, false);
+      }
     }
   )
 );

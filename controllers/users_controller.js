@@ -1,11 +1,10 @@
 const ResetPasswordToken = require("../models/reset_password_token");
 const User = require("../models/user");
 const crypto = require("crypto");
-const resetPasswordMailer = require("../mailers/reset_password_mailer");
-const resetPasswordEmailWorker = require("../workers/resetPassword_email_worker");
 const queue = require("../config/kue");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const fetch = require("node-fetch");
 
 // sign in and create a session for the user
 module.exports.signIn = function (req, res) {
@@ -38,6 +37,21 @@ module.exports.create = async function (req, res) {
     req.flash("error", "Passwords don't match");
     return res.redirect("back");
   }
+
+  const response = await fetch(
+    `https://www.google.com/recaptcha/api/siteverify?secret=6LcVgVEjAAAAAJa3WNSWAcAJb8Bbw08Yn_OpaW1u&response=${req.body["g-recaptcha-response"]}`,
+    {
+      method: "POST",
+    }
+  );
+
+  const captchaVerified = await response.json();
+
+  if (!captchaVerified.success) {
+    req.flash("error", "please check captcha");
+    return res.redirect("back");
+  }
+
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
@@ -106,6 +120,8 @@ module.exports.resetPasswordPage = async function (req, res) {
   let resetPasswordToken = await ResetPasswordToken.findOne({
     accessToken: req.params.accessToken,
   });
+
+  console.log("resetPasswordToken", resetPasswordToken);
 
   if (
     !resetPasswordToken ||

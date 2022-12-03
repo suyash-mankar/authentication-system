@@ -32,7 +32,7 @@ router.post(
   usersController.createResetPasswordToken
 );
 
-router.get("/forgot-password  ", usersController.forgotPasswordPage);
+router.get("/forgot-password", usersController.forgotPasswordPage);
 router.get("/reset-password/:accessToken", usersController.resetPasswordPage);
 router.post("/reset-password/:accessToken", usersController.resetPassword);
 

@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/css/user_sign_in.css" />
 
 <div class="login-form-container">
-  <h1>sign in</h1>
+  <h1>Sign In</h1>
 
   <button
     onclick="window.location='/users/auth/google'"
@@ -23,19 +23,35 @@
 
   <form id="login-form" action="/users/create-session" method="POST">
     <label for="email"> Email </label>
-    <input type="email" name="email" placeholder="Enter Your Email" required />
+    <input
+      id="login-email"
+      type="email"
+      name="email"
+      placeholder="Enter Your Email"
+      required
+    />
     <label for="password"> Password </label>
-    <input type="password" name="password" placeholder="Password" required />
+    <input
+      id="login-password"
+      type="password"
+      name="password"
+      placeholder="Password"
+      required
+    />
 
     <a href="/users/forgot-password"> forgot password</a>
+    <div
+      class="g-recaptcha"
+      data-sitekey="6LcVgVEjAAAAAB0mdcxgNpLZ0ICKlI4w0QelPemq"
+    ></div>
 
-    <button
+    <input
+      id="signin-submit-btn"
       type="submit"
-      class="g-recaptcha btn btn-primary"
-      data-sitekey="6LcMT1AjAAAAAGt3lBAghqdTkbxFvRVT0FyNOQYZ"
-      data-callback="onLoginFormSubmit"
-    >
-      Sign In
-    </button>
+      class="btn btn-primary"
+      value="Sign In"
+    />
   </form>
 </div>
+
+<script src="/js/user_sign_in.js"></script>

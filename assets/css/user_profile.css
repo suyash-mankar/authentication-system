@@ -1,0 +1,15 @@
+.container {
+  border: 1px solid lightgrey;
+  border-radius: 10px;
+  width: 30%;
+  margin: 100px auto;
+  padding: 30px;
+  box-shadow: -1px 1px 10px 1px grey; }
+  .container h2 {
+    margin-bottom: 40px; }
+  .container p {
+    font-size: 1.2rem;
+    margin-bottom: 30px; }
+  .container a {
+    font-size: 1.2rem;
+    text-decoration: none; }

@@ -171,3 +171,9 @@ module.exports.changePassword = async function (req, res) {
   req.flash("success", "Password changed successfully");
   return res.redirect("/");
 };
+
+module.exports.forgotPasswordPage = function (req, res) {
+  return res.render("forgot_password", {
+    title: "forgot password",
+  });
+};

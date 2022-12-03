@@ -11,6 +11,8 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <link rel="stylesheet" href="/css/header.css" />
+    <%- style %>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"
       integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q=="
@@ -32,8 +34,6 @@
     <%- include('_header'); %>
 
     <main><%- body %></main>
-
-    <%- include('_footer'); %>
 
     <script>
       <% if(flash.success && flash.success.length>0) { %>
@@ -60,5 +60,7 @@
 
         <% } %>
     </script>
+
+    <%- script %>
   </body>
 </html>

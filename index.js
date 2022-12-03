@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const port = 8000;
@@ -14,12 +14,29 @@ const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const customMiddleware = require("./config/middleware");
 const passportGoogle = require("./config/passport-google-oauth2-strategy");
+const sassMiddleware = require("node-sass-middleware");
+
+app.use(
+  sassMiddleware({
+    src: "./assets/scss",
+    dest: "./assets/css",
+    debug: true,
+    outputStyle: "extended",
+    prefix: "/css",
+  })
+);
+
+app.use(express.static("./assets"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.set("views", "./views");
+
+app.use(expressLayouts);
+// extract style and script from sub pages into the layout
+app.set("layout extractStyles", true);
+app.set("layout extractScripts", true);
 
 // mongo store is used to store the session cookie in the db
 app.use(

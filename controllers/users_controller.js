@@ -107,14 +107,19 @@ module.exports.resetPasswordPage = async function (req, res) {
     accessToken: req.params.accessToken,
   });
 
-  if (resetPasswordToken.isValid) {
+  if (
+    !resetPasswordToken ||
+    !resetPasswordToken.isValid ||
+    resetPasswordToken.expiresAt < Date.now()
+  ) {
+    await ResetPasswordToken.deleteOne({ accessToken: req.params.accessToken });
+    req.flash("error", "Token Expired");
+    return res.redirect("/");
+  } else {
     return res.render("reset_password", {
       title: "reset password",
       resetPasswordToken: resetPasswordToken,
     });
-  } else {
-    req.flash("error", "Token Expired");
-    return res.redirect("/");
   }
 };
 
@@ -133,11 +138,12 @@ module.exports.resetPassword = async function (req, res) {
 
     if (resetPasswordToken.isValid) {
       let user = await User.findById(resetPasswordToken.user._id);
-      user.password = req.body.password;
+      bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+        user.password = hash;
+        user.save();
+      });
       resetPasswordToken.isValid = false;
       resetPasswordToken.save();
-      user.save();
-
       req.flash("success", "Password changed successfully");
       return res.redirect("/users/sign-in");
     }
@@ -158,8 +164,10 @@ module.exports.changePasswordPage = function (req, res) {
 
 module.exports.changePassword = async function (req, res) {
   let user = await User.findById(req.params.id);
-  user.password = req.body.password;
-  user.save();
+  bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+    user.password = hash;
+    user.save();
+  });
   req.flash("success", "Password changed successfully");
-  return res.redirect("/users/sign-in");
+  return res.redirect("/");
 };

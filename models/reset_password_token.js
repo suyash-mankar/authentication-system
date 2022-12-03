@@ -16,11 +16,18 @@ const resetPasswordTokenSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
+    expiresAt: {
+      type: Date,
+      default: Date.now() + 60 * 60 * 1000,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+resetPasswordTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 10 });
 
 const ResetPasswordToken = mongoose.model(
   "Reset_Password_Token",

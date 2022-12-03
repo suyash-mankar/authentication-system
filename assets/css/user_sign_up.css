@@ -6,7 +6,7 @@
   padding: 30px;
   box-shadow: -1px 1px 10px 1px grey; }
   .signup-form-container button {
-    margin-top: 20px;
+    margin-top: 10px;
     width: 50%; }
     .signup-form-container button img {
       margin-bottom: 3px;
@@ -14,7 +14,7 @@
   .signup-form-container .or-container {
     display: flex;
     color: grey;
-    margin: 20px auto; }
+    margin: 10px auto; }
     .signup-form-container .or-container span {
       margin: 0 15px; }
     .signup-form-container .or-container hr {
@@ -39,10 +39,9 @@
     padding: 10px;
     width: 100%;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border: 1px solid grey; }
   .signup-form-container #signup-form a {
     text-decoration: none; }
-  .signup-form-container #signup-form button {
-    margin-top: 20px;
-    width: 50%; }
+  .signup-form-container #signup-form .g-recaptcha {
+    margin: 10px 0; }

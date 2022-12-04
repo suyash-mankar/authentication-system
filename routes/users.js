@@ -17,21 +17,25 @@ router.post(
   usersController.createSession
 );
 
+
+// social authentication
 router.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
+
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/users/sign-in" }),
   usersController.createSession
 );
 
+
+// forgot password
 router.post(
   "/create-forgot-password-token",
   usersController.createForgotPasswordToken
 );
-
 router.get("/forgot-password", usersController.forgotPasswordPage);
 router.get(
   "/forgot-password-reset/:accessToken",
@@ -39,6 +43,8 @@ router.get(
 );
 router.post("/forgot-password-reset/:accessToken", usersController.forgotPasswordReset);
 
+
+// change password
 router.get("/change-password/:id", usersController.changePasswordPage);
 router.post("/change-password/:id", usersController.changePassword);
 

@@ -11,12 +11,10 @@ const forgotPasswordTokenSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     isValid: {
       type: Boolean,
       default: true,
     },
-
     expiresAt: {
       type: Date,
       default: Date.now() + 60 * 60 * 1000,
@@ -26,8 +24,6 @@ const forgotPasswordTokenSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-forgotPasswordTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 10 });
 
 const ForgotPasswordToken = mongoose.model(
   "ForgotPasswordToken",

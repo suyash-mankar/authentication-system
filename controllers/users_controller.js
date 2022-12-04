@@ -85,6 +85,7 @@ module.exports.createSession = function (req, res) {
   return res.redirect("/users/profile");
 };
 
+// logout user
 module.exports.destroySession = function (req, res) {
   req.logout(function (err) {
     if (err) {
@@ -110,7 +111,7 @@ module.exports.createForgotPasswordToken = async function (req, res) {
       // populate the user field
       forgotPasswordToken = await forgotPasswordToken.populate("user");
       // send mail to user
-      // use parallel jobs
+      // use parallel jobs (kue) to send job to workers
       let job = await queue
         .create("emails", forgotPasswordToken)
         .save(function (err) {
@@ -199,6 +200,7 @@ module.exports.forgotPasswordReset = async function (req, res) {
   }
 };
 
+// render page to change password
 module.exports.changePasswordPage = function (req, res) {
   return res.render("change_password", {
     title: "change password",
@@ -206,8 +208,11 @@ module.exports.changePasswordPage = function (req, res) {
   });
 };
 
+// change user password
 module.exports.changePassword = async function (req, res) {
+  // find the user
   let user = await User.findById(req.params.id);
+  // change the password
   bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
     user.password = hash;
     user.save();

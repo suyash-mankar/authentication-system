@@ -11,7 +11,6 @@ passport.use(
       passReqToCallback: true,
     },
     async function (req, email, password, done) {
-
       // find a user in db using email
       let user = await User.findOne({ email: email });
 

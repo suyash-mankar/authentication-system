@@ -17,7 +17,6 @@ router.post(
   usersController.createSession
 );
 
-
 // social authentication
 router.get(
   "/auth/google",
@@ -30,7 +29,6 @@ router.get(
   usersController.createSession
 );
 
-
 // forgot password
 router.post(
   "/create-forgot-password-token",
@@ -41,8 +39,10 @@ router.get(
   "/forgot-password-reset/:accessToken",
   usersController.resetPasswordPage
 );
-router.post("/forgot-password-reset/:accessToken", usersController.forgotPasswordReset);
-
+router.post(
+  "/forgot-password-reset/:accessToken",
+  usersController.forgotPasswordReset
+);
 
 // change password
 router.get("/change-password/:id", usersController.changePasswordPage);

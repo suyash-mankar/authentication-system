@@ -1,8 +1,10 @@
 <link rel="stylesheet" href="/css/user_profile.css" />
 
 <div class="container">
+  <!-- user details -->
   <h2>User Profile</h2>
   <p>Name : <%= user.name %></p>
   <p>Email : <%= user.email %></p>
+  <!-- reset password -->
   <a href="/users/change-password/<%= user.id %>"> Reset Password </a>
 </div>

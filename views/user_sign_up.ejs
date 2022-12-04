@@ -3,17 +3,14 @@
 <div class="signup-form-container">
   <h1>Sign Up</h1>
 
-  <button
-    onclick="window.location='/users/auth/google'"
-    type="button"
-    class="btn btn-outline-dark"
-  >
+  <!-- login using google -->
+  <a href="/users/auth/google" class="btn btn-outline-dark">
     <img
       src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
       alt="google-logo"
     />
-    Sign up with Google
-  </button>
+    Log up with Google
+  </a>
 
   <div class="or-container">
     <hr />
@@ -21,6 +18,7 @@
     <hr />
   </div>
 
+  <!-- signup form -->
   <form id="signup-form" action="/users/create" method="POST">
     <div class="name-email-container">
       <div>
@@ -68,6 +66,7 @@
         />
       </div>
     </div>
+    <!-- captcha -->
     <div
       class="g-recaptcha"
       data-sitekey="6LcVgVEjAAAAAB0mdcxgNpLZ0ICKlI4w0QelPemq"

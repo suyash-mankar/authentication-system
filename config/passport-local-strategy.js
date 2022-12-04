@@ -11,8 +11,11 @@ passport.use(
       passReqToCallback: true,
     },
     async function (req, email, password, done) {
+
+      // find a user in db using email
       let user = await User.findOne({ email: email });
 
+      // fetch the response from google recaptcha api to verify recaptcha
       const response = await fetch(
         `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${req.body["g-recaptcha-response"]}`,
         {
@@ -22,12 +25,15 @@ passport.use(
 
       const captchaVerified = await response.json();
 
+      // if recaptcha is not successful
       if (!captchaVerified.success) {
         req.flash("error", "please check captcha");
         return done(null, false);
       }
 
+      // if user found in db
       if (user) {
+        // compare the passwords
         bcrypt.compare(password, user.password, function (err, result) {
           if (result) {
             return done(null, user);
@@ -36,6 +42,7 @@ passport.use(
             return done(err, false);
           }
         });
+        // if user not found in db
       } else {
         req.flash("error", "Invalid Username/Password");
         return done(err, false);

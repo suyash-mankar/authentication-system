@@ -1,13 +1,15 @@
-const ResetPasswordToken = require("../models/reset_password_token");
+const ForgotPasswordToken = require("../models/forgot_password_token");
 const User = require("../models/user");
 const crypto = require("crypto");
 const queue = require("../config/kue");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const fetch = require("node-fetch");
+const forgotPasswordEmailWorker = require("../workers/forgot_password_email_worker");
 
-// sign in and create a session for the user
+//sign in page
 module.exports.signIn = function (req, res) {
+  // if user is already logged in, redirect to user profile page
   if (req.isAuthenticated()) {
     return res.redirect("/users/profile");
   }
@@ -16,7 +18,9 @@ module.exports.signIn = function (req, res) {
   });
 };
 
+//sign up page
 module.exports.signUp = function (req, res) {
+  // if user is already logged in, redirect to user profile page
   if (req.isAuthenticated()) {
     return res.redirect("/users/profile");
   }
@@ -32,29 +36,35 @@ module.exports.profile = function (req, res) {
   });
 };
 
+// create a user upon signup
 module.exports.create = async function (req, res) {
+  // check if password and confirm password match
   if (req.body.password !== req.body.confirm_password) {
     req.flash("error", "Passwords don't match");
     return res.redirect("back");
   }
 
+  // verify the recaptcha
   const response = await fetch(
     `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${req.body["g-recaptcha-response"]}`,
     {
       method: "POST",
     }
   );
-
   const captchaVerified = await response.json();
 
+  // if captcha is unsuccessful
   if (!captchaVerified.success) {
     req.flash("error", "please check captcha");
     return res.redirect("back");
   }
 
+  // find user in database with email id
   const user = await User.findOne({ email: req.body.email });
 
+  // if user not present in db, create new user
   if (!user) {
+    // hash the user password
     bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
       User.create({
         email: req.body.email,
@@ -69,6 +79,7 @@ module.exports.create = async function (req, res) {
   }
 };
 
+// login user and redirect to profile page
 module.exports.createSession = function (req, res) {
   req.flash("success", "Logged in successfully");
   return res.redirect("/users/profile");
@@ -85,27 +96,30 @@ module.exports.destroySession = function (req, res) {
   return res.redirect("/");
 };
 
-module.exports.createResetPasswordToken = async function (req, res) {
+// create a forgot password token
+module.exports.createForgotPasswordToken = async function (req, res) {
   try {
+    // find user in database with email id
     let user = await User.findOne({ email: req.body.email });
     if (user) {
-      let resetPasswordToken = await ResetPasswordToken.create({
+      let forgotPasswordToken = await ForgotPasswordToken.create({
         user: user._id,
         accessToken: crypto.randomBytes(20).toString("hex"),
         isValid: true,
       });
-
-      resetPasswordToken = await resetPasswordToken.populate("user");
-
+      // populate the user field
+      forgotPasswordToken = await forgotPasswordToken.populate("user");
       // send mail to user
-      // resetPasswordMailer.resetPassword(resetPasswordToken);
-      let job = queue.create("emails", resetPasswordToken).save(function (err) {
-        if (err) {
-          console.log("error in creating a queue");
-          return;
-        }
-        console.log("job enqueued", job.id);
-      });
+      // use parallel jobs
+      let job = await queue
+        .create("emails", forgotPasswordToken)
+        .save(function (err) {
+          if (err) {
+            console.log("error in creating a queue");
+            return;
+          }
+          console.log("job enqueued", job.id);
+        });
 
       req.flash("success", "Check your mail id to reset password");
       return res.redirect("/");
@@ -116,50 +130,64 @@ module.exports.createResetPasswordToken = async function (req, res) {
   }
 };
 
+// render the reset forgot password page
 module.exports.resetPasswordPage = async function (req, res) {
-  let resetPasswordToken = await ResetPasswordToken.findOne({
+  // find the forgot password token in db using the access token
+  let forgotPasswordToken = await ForgotPasswordToken.findOne({
     accessToken: req.params.accessToken,
   });
 
-  console.log("resetPasswordToken", resetPasswordToken);
-
-  if (
-    !resetPasswordToken ||
-    !resetPasswordToken.isValid ||
-    resetPasswordToken.expiresAt < Date.now()
+  // if token not found in db
+  if (!forgotPasswordToken) {
+    req.flash("error", "Token Expired");
+    return res.redirect("/");
+    // if token is not valid or expired
+  } else if (
+    !forgotPasswordToken.isValid ||
+    forgotPasswordToken.expiresAt < Date.now()
   ) {
-    await ResetPasswordToken.deleteOne({ accessToken: req.params.accessToken });
+    // delete the token from db
+    await ForgotPasswordToken.deleteOne({
+      accessToken: req.params.accessToken,
+    });
     req.flash("error", "Token Expired");
     return res.redirect("/");
   } else {
-    return res.render("reset_password", {
+    return res.render("forgot_password_reset", {
       title: "reset password",
-      resetPasswordToken: resetPasswordToken,
+      forgotPasswordToken: forgotPasswordToken,
     });
   }
 };
 
-module.exports.resetPassword = async function (req, res) {
+// reset forgot password
+module.exports.forgotPasswordReset = async function (req, res) {
   try {
+    // check if password and confirm password match
     if (req.body.password !== req.body.confirm_password) {
       req.flash("error", "passwords don't match");
       return res.redirect("back");
     }
 
-    let resetPasswordToken = await ResetPasswordToken.findOne({
+    // find the token in db
+    let forgotPasswordToken = await ForgotPasswordToken.findOne({
       accessToken: req.params.accessToken,
     });
+    // populate the user field in token
+    await forgotPasswordToken.populate("user");
 
-    await resetPasswordToken.populate("user");
-
-    if (resetPasswordToken.isValid) {
-      let user = await User.findById(resetPasswordToken.user._id);
+    // if token in valid
+    if (forgotPasswordToken.isValid) {
+      // find the user
+      let user = await User.findById(forgotPasswordToken.user._id);
+      // set the new password in db after hashing
       bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
         user.password = hash;
         user.save();
       });
-      resetPasswordToken.isValid = false;
-      resetPasswordToken.save();
+      // set the validity of token as false
+      forgotPasswordToken.isValid = false;
+      forgotPasswordToken.save();
       req.flash("success", "Password changed successfully");
       return res.redirect("/users/sign-in");
     }
@@ -188,6 +216,7 @@ module.exports.changePassword = async function (req, res) {
   return res.redirect("/");
 };
 
+// render forgot password page
 module.exports.forgotPasswordPage = function (req, res) {
   return res.render("forgot_password", {
     title: "forgot password",

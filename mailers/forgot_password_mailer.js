@@ -1,18 +1,17 @@
 const nodeMailer = require("../config/modemailer");
 
-exports.resetPassword = (resetPasswordToken) => {
-  console.log("inside comment mailer");
-
+exports.forgotPassword = (forgotPasswordToken) => {
+  // set the mail template
   let htmlString = nodeMailer.renderTemplate(
-    { resetPasswordToken: resetPasswordToken },
-    "/reset_password/reset_password.ejs"
+    { forgotPasswordToken: forgotPasswordToken },
+    "/forgot_password/forgot_password_template.ejs"
   );
-
+  // send mail
   nodeMailer.transporter.sendMail(
     {
       from: "engineeringresurrection@gmail.com",
-      to: resetPasswordToken.user.email,
-      subject: "Reset your password",
+      to: forgotPasswordToken.user.email,
+      subject: "reset your password",
       html: htmlString,
     },
     (err, info) => {

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const resetPasswordTokenSchema = new mongoose.Schema(
+const forgotPasswordTokenSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -27,11 +27,11 @@ const resetPasswordTokenSchema = new mongoose.Schema(
   }
 );
 
-resetPasswordTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 10 });
+forgotPasswordTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 10 });
 
-const ResetPasswordToken = mongoose.model(
-  "Reset_Password_Token",
-  resetPasswordTokenSchema
+const ForgotPasswordToken = mongoose.model(
+  "ForgotPasswordToken",
+  forgotPasswordTokenSchema
 );
 
-module.exports = ResetPasswordToken;
+module.exports = ForgotPasswordToken;

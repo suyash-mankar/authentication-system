@@ -5,10 +5,10 @@
   margin: 50px auto;
   padding: 30px;
   box-shadow: -1px 1px 10px 1px grey; }
-  .login-form-container button {
+  .login-form-container a {
     margin-top: 10px;
     width: 100%; }
-    .login-form-container button img {
+    .login-form-container a img {
       margin-bottom: 3px;
       width: 15px; }
   .login-form-container .or-container {

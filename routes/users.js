@@ -28,13 +28,16 @@ router.get(
 );
 
 router.post(
-  "/create-reset-password-token",
-  usersController.createResetPasswordToken
+  "/create-forgot-password-token",
+  usersController.createForgotPasswordToken
 );
 
 router.get("/forgot-password", usersController.forgotPasswordPage);
-router.get("/reset-password/:accessToken", usersController.resetPasswordPage);
-router.post("/reset-password/:accessToken", usersController.resetPassword);
+router.get(
+  "/forgot-password-reset/:accessToken",
+  usersController.resetPasswordPage
+);
+router.post("/forgot-password-reset/:accessToken", usersController.forgotPasswordReset);
 
 router.get("/change-password/:id", usersController.changePasswordPage);
 router.post("/change-password/:id", usersController.changePassword);

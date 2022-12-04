@@ -5,17 +5,18 @@ const port = 8000;
 const expressLayouts = require("express-ejs-layouts");
 const db = require("./config/mongoose");
 const bodyParser = require("body-parser");
-
 // used for session cookie
 const session = require("express-session");
 const passport = require("passport");
 const passportLocal = require("./config/passport-local-strategy");
 const MongoStore = require("connect-mongo");
+// to display flash messages on screen
 const flash = require("connect-flash");
 const customMiddleware = require("./config/middleware");
 const passportGoogle = require("./config/passport-google-oauth2-strategy");
 const sassMiddleware = require("node-sass-middleware");
 
+// use scss
 app.use(
   sassMiddleware({
     src: "./assets/scss",
@@ -26,14 +27,17 @@ app.use(
   })
 );
 
+// set folder for static files
 app.use(express.static("./assets"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// set ejs as template engine
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
 app.use(expressLayouts);
+
 // extract style and script from sub pages into the layout
 app.set("layout extractStyles", true);
 app.set("layout extractScripts", true);
@@ -62,9 +66,9 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(passport.setAuthenticatedUser);
 
+// use connect flash for flash messages
 app.use(flash());
 app.use(customMiddleware.setFlash);
 

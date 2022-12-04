@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- noty css-->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css"
@@ -11,6 +12,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <!-- bootstrap css -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -20,6 +22,7 @@
     <link rel="stylesheet" href="/css/layout.css" />
     <link rel="stylesheet" href="/css/header.css" />
     <%- style %>
+    <!-- noty js -->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"
       integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q=="
@@ -27,38 +30,8 @@
       referrerpolicy="no-referrer"
     ></script>
     <title><%= title %></title>
+    <!-- google recaptcha -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
-    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
-      function onSignupFormSubmit(token) {
-        let name = document.getElementById("signup-name").val;
-        let email = document.getElementById("signup-email").val;
-        let password = document.getElementById("signup-password").val;
-        let confirmPassword = document.getElementById(
-          "signup-confirm-password"
-        ).val;
-        if (
-          name !== undefined &&
-          email !== undefined &&
-          password !== undefined &&
-          confirmPassword !== undefined
-        ) {
-          document.getElementById("signup-form").submit();
-        } else {
-          window.alert("please enter all fields");
-        }
-      }
-      function onLoginFormSubmit(token) {
-        let email = document.getElementById("login-email").val;
-        let password = document.getElementById("login-password").val;
-        if (email !== undefined && password !== undefined) {
-          document.getElementById("login-form").submit();
-        } else {
-          window.alert("please enter all fields");
-        }
-      }
-    </script> -->
   </head>
   <body>
     <%- include('_header'); %>
@@ -66,6 +39,8 @@
     <main><%- body %></main>
 
     <script>
+
+      // flash mesasges
       <% if(flash.success && flash.success.length>0) { %>
 
         new Noty({
@@ -90,6 +65,7 @@
 
         <% } %>
     </script>
+    <!-- bootstrap js -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"

@@ -14,7 +14,7 @@ passport.use(
       let user = await User.findOne({ email: email });
 
       const response = await fetch(
-        `https://www.google.com/recaptcha/api/siteverify?secret=6LcVgVEjAAAAAJa3WNSWAcAJb8Bbw08Yn_OpaW1u&response=${req.body["g-recaptcha-response"]}`,
+        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${req.body["g-recaptcha-response"]}`,
         {
           method: "POST",
         }

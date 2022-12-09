@@ -77,6 +77,39 @@ style="margin: 10px; background: white">
 
 </div>
 
-## Project
+   <br/>
+   <br/>
 
-Checkout the website here -
+- Library:
+
+  - connect-flash
+  - connect-mongo
+  - cookie-parser
+  - crypto
+  - dotenv
+  - ejs
+  - express
+  - express-ejs-layouts
+  - express-session
+  - kue
+  - mongoose
+  - node-sass-middleware
+  - node-fetch
+  - nodemailer
+  - nodemon
+  - noty
+  - passport
+  - passport-google-oauth
+  - passport-local
+
+- Framework: ExpressJS
+- Database: MongoDB, RedisDB
+- Version Control System: Git
+- VCS Hosting: GitHub
+- Programming / Scripting: JavaScript
+- Front-End: HTML, CSS, EJS
+- Runtime Environment: NodeJS
+- Integrated Development Environment: VSCode
+
+  <br/>
+  <br/>

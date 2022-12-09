@@ -64,7 +64,6 @@ passport.deserializeUser(function (id, done) {
   });
 });
 
-module.exports = passport;
 
 // check if the user is authenticated
 passport.checkAuthentication = function (req, res, next) {
@@ -84,3 +83,6 @@ passport.setAuthenticatedUser = function (req, res, next) {
   }
   next();
 };
+
+
+module.exports = passport;

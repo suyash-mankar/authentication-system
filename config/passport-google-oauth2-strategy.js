@@ -9,8 +9,7 @@ const saltRounds = 10;
 passport.use(
   new googleStrategy(
     {
-      clientID:
-        "560084228664-h039sog4llvisgf006uspu2ehit6pg4q.apps.googleusercontent.com",
+      clientID: process.env.PASSPORT_GOOGLE_CLIENT_ID,
       clientSecret: process.env.PASSPORT_GOOGLE_CLIENT_SECERET,
       callbackURL: "http://localhost:8000/users/auth/google/callback",
     },

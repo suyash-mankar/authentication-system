@@ -11,7 +11,7 @@ passport.use(
     {
       clientID: process.env.PASSPORT_GOOGLE_CLIENT_ID,
       clientSecret: process.env.PASSPORT_GOOGLE_CLIENT_SECERET,
-      callbackURL: "http://localhost:8000/users/auth/google/callback",
+      callbackURL: process.env.PASSPORT_GOOGLE_CALLBACK_URL,
     },
     function (accessToken, refreshToken, profile, done) {
       // find a user

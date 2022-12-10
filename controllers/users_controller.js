@@ -124,6 +124,9 @@ module.exports.createForgotPasswordToken = async function (req, res) {
 
       req.flash("success", "Check your mail id to reset password");
       return res.redirect("/");
+    } else {
+      req.flash("error", "Enter correct mail id");
+      return res.redirect("back");
     }
   } catch (err) {
     req.flash("error in creating reset password token", err);
@@ -145,7 +148,7 @@ module.exports.resetPasswordPage = async function (req, res) {
     // if token is not valid or expired
   } else if (
     !forgotPasswordToken.isValid ||
-    forgotPasswordToken.expiresAt < Date.now()
+    forgotPasswordToken.expiresAt.getTime() < Date.now()
   ) {
     // delete the token from db
     await ForgotPasswordToken.deleteOne({

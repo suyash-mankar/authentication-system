@@ -54,7 +54,7 @@ app.use(
     },
     store: MongoStore.create(
       {
-        mongoUrl: "mongodb://localhost:27017/authentication_system",
+        mongoUrl: `mongodb+srv://suyashmankar:${process.env.MONGODB_ATLAS_PASS}@cluster0.biqbhsa.mongodb.net/?retryWrites=true&w=majority`,
         autoRemove: "disabled",
       },
       function (err) {

@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/authentication_system");
+mongoose.connect(
+  `mongodb+srv://suyashmankar:${process.env.MONGODB_ATLAS_PASS}@cluster0.biqbhsa.mongodb.net/?retryWrites=true&w=majority`
+);
 
 const db = mongoose.connection;
 

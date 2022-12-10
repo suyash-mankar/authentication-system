@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const env = require("./config/environment");
 const app = express();
 const port = 8000;
 const expressLayouts = require("express-ejs-layouts");
@@ -46,7 +47,7 @@ app.set("layout extractScripts", true);
 app.use(
   session({
     name: "authentication_system",
-    secret: "authsystem",
+    secret: env.session_cookie_key,
     saveUninitialized: false,
     resave: false,
     cookie: {
@@ -54,7 +55,7 @@ app.use(
     },
     store: MongoStore.create(
       {
-        mongoUrl: `mongodb+srv://suyashmankar:${process.env.MONGODB_ATLAS_PASS}@cluster0.biqbhsa.mongodb.net/?retryWrites=true&w=majority`,
+        mongoUrl: env.mongodb_url,
         autoRemove: "disabled",
       },
       function (err) {

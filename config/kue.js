@@ -1,7 +1,9 @@
+const env = require("./environment");
+
 const redisConfig = {
   redis: {
     port: 6379,
-    host: process.env.REDIS_HOST,
+    host: env.redis_host,
   },
 };
 

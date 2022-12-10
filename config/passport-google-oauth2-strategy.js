@@ -4,14 +4,16 @@ const crypto = require("crypto");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const env = require("./environment");
 
 // tell passport to use a new strategy for google login
+
 passport.use(
   new googleStrategy(
     {
-      clientID: process.env.PASSPORT_GOOGLE_CLIENT_ID,
-      clientSecret: process.env.PASSPORT_GOOGLE_CLIENT_SECERET,
-      callbackURL: process.env.PASSPORT_GOOGLE_CALLBACK_URL,
+      clientID: env.google_client_id,
+      clientSecret: env.google_client_secret,
+      callbackURL: env.google_callback_url,
     },
     function (accessToken, refreshToken, profile, done) {
       // find a user

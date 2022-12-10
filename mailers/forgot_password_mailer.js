@@ -3,6 +3,7 @@ const env = require("../config/environment");
 
 exports.forgotPassword = (forgotPasswordToken) => {
   // set the mail template
+
   let htmlString = nodeMailer.renderTemplate(
     {
       forgotPasswordToken: forgotPasswordToken,

@@ -1,9 +1,13 @@
 const nodeMailer = require("../config/modemailer");
+const env = require("../config/environment");
 
 exports.forgotPassword = (forgotPasswordToken) => {
   // set the mail template
   let htmlString = nodeMailer.renderTemplate(
-    { forgotPasswordToken: forgotPasswordToken },
+    {
+      forgotPasswordToken: forgotPasswordToken,
+      forgotPasswordLink: env.forgot_password_link,
+    },
     "/forgot_password/forgot_password_template.ejs"
   );
   // send mail
